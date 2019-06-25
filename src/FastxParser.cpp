@@ -139,7 +139,7 @@ inline void copyRecord(kseq_t* seq, ReadSeq* s) {
 }
 
 inline void copyRecord(kseq_t* seq, ReadQual* s) {
-    // Copy over the sequence and read name 
+    // Copy over the sequence and read name
     // and quality
     s->seq.assign(seq->seq.s, seq->seq.l);
     s->name.assign(seq->name.s, seq->name.l);
@@ -266,6 +266,10 @@ int parseReadPair(
     // open the file and init the parser
     auto fp = gzopen(file.c_str(), "r");
     auto fp2 = gzopen(file2.c_str(), "r");
+
+    int pipe_size = 10000000000; // 10 GB
+    fcntl(fp, F_SETPIPE_SZ, pipe_size);
+    fcntl(fp2, F_SETPIPE_SZ, pipe_size);
 
     // The number of reads we have in the local vector
     size_t numWaiting{0};
